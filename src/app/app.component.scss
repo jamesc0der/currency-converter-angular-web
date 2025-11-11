@@ -1,23 +1,174 @@
-.toolbar {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  font-size: 1.25rem;
-  padding: 0 16px;
+.app-wrapper {
+  min-height: 100vh;
+  height: 100vh;
+  width: 100%;
+  background: 
+    linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%),
+    url('https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=2000') center/cover no-repeat fixed;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+      radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 40% 20%, rgba(120, 40, 200, 0.08) 0%, transparent 50%);
+    animation: backgroundFloat 20s ease-in-out infinite;
+  }
+}
+
+@keyframes backgroundFloat {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.1); }
 }
 
 .container {
-  max-width: 600px;
+  max-width: 100%;
+  width: 100%;
+  height: 100%;
   margin: 0 auto;
-  padding: 16px;
-}
-
-@media (max-width: 600px) {
-  .container {
-    padding: 12px;
+  padding: 40px 0;
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+  overflow-y: auto;
+  overflow-x: hidden;
+  
+  /* Custom scrollbar */
+  &::-webkit-scrollbar {
+    width: 10px;
   }
   
-  .toolbar {
-    font-size: 1.1rem;
+  &::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.5);
+    }
+  }
+}
+
+.main-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  animation: fadeInUp 0.6s ease;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 20px;
+}
+
+/* Desktop & Very Large Desktop - History on Left */
+@media (min-width: 1200px) {
+  .container {
+    padding: 40px 0;
+    overflow-y: hidden;
+  }
+  
+  .main-content {
+    padding: 0 40px;
+    grid-template-columns: 1fr 400px;
+    gap: 32px;
+    align-items: start;
+    max-width: 1400px;
+    height: 100%;
+  }
+  
+  .converter-main {
+    order: 1;
+    overflow-y: auto;
+    max-height: calc(100vh - 80px);
+    padding-right: 8px;
+    
+    /* Custom scrollbar for converter */
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 10px;
+      
+      &:hover {
+        background: rgba(255, 255, 255, 0.5);
+      }
+    }
+  }
+  
+  .history-sidebar {
+    order: 2;
+    position: sticky;
+    top: 0;
+    max-height: calc(100vh - 80px);
+    overflow: visible;
+  }
+}
+
+/* Large Desktop */
+@media (min-width: 961px) and (max-width: 1199px) {
+  .container {
+    max-width: 960px;
+  }
+  
+  .main-content {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding: 0 24px;
+  }
+}
+
+/* Tablet */
+@media (min-width: 601px) and (max-width: 960px) {
+  .container {
+    max-width: 768px;
+    padding: 32px 0;
+  }
+  
+  .main-content {
+    gap: 24px;
+    padding: 0 20px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .container {
+    padding: 20px 0;
+  }
+  
+  .main-content {
+    gap: 20px;
+    padding: 0 16px;
+  }
+}
+
+/* Extra Small */
+@media (max-width: 360px) {
+  .container {
+    padding: 16px 0;
+  }
+  
+  .main-content {
+    gap: 16px;
+    padding: 0 12px;
   }
 }

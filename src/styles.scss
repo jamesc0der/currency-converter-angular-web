@@ -1,52 +1,142 @@
-/* Global styles */
+/* Global styles - XE.com inspired design */
 
 html, body { 
   height: 100%; 
+  width: 100%;
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  padding: 0;
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  overflow-x: hidden;
 }
 
 body {
-  background-color: #fafafa;
+  background: transparent;
   line-height: 1.6;
+  color: #333;
+  overflow-x: hidden;
 }
 
 * {
   box-sizing: border-box;
 }
 
-/* Ensure proper responsive behavior */
+/* Enhanced card styling */
 .mat-mdc-card {
   margin: 16px 0;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.15) !important;
+  }
+}
+
+/* Enhanced form fields */
+.mat-mdc-form-field {
+  .mat-mdc-text-field-wrapper {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+  }
+}
+
+/* Button enhancements */
+.mat-mdc-raised-button {
+  border-radius: 8px !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  
+  &:hover:not([disabled]) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.mat-mdc-mini-fab {
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  
+  &:hover {
+    transform: scale(1.1);
+  }
 }
 
 /* Custom scrollbar for webkit browsers */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
+  background: rgba(255, 255, 255, 0.3);
   border-radius: 10px;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.5);
+  }
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
 }
 
 /* Mobile optimizations */
+@media (max-width: 960px) {
+  .mat-mdc-card {
+    margin: 12px 0;
+  }
+}
+
 @media (max-width: 600px) {
+  body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+  
   .mat-mdc-card {
     margin: 8px 0;
     border-radius: 12px !important;
+    
+    &:hover {
+      transform: none; /* Disable hover effect on mobile */
+    }
   }
   
   .mat-mdc-form-field {
     font-size: 16px !important; /* Prevents zoom on iOS */
+  }
+  
+  .mat-mdc-raised-button {
+    &:hover:not([disabled]) {
+      transform: none; /* Disable hover effect on mobile */
+    }
+  }
+}
+
+/* Tablet optimizations */
+@media (min-width: 601px) and (max-width: 960px) {
+  .mat-mdc-card {
+    border-radius: 14px !important;
   }
 }

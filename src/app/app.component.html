@@ -1,8 +1,8 @@
-<mat-toolbar color="primary" class="toolbar">
-  <span>💱 {{ title }}</span>
-</mat-toolbar>
-
-<div class="container">
-  <app-currency-converter />
-  <app-conversion-history />
+<div class="app-wrapper">
+  <div class="container">
+    <div class="main-content">
+      <app-currency-converter class="converter-main" />
+      <app-conversion-history class="history-sidebar" />
+    </div>
+  </div>
 </div>

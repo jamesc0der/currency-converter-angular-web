@@ -5,87 +5,113 @@
   
   <mat-card-content>
     <form [formGroup]="converterForm" (ngSubmit)="convert()">
-      <!-- Amount Input -->
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Amount</mat-label>
-        <input 
-          matInput 
-          type="number" 
-          formControlName="amount"
-          appCurrencyInput
-          placeholder="Enter amount">
-        @if (converterForm.get('amount')?.hasError('required')) {
-          <mat-error>Amount is required</mat-error>
-        }
-        @if (converterForm.get('amount')?.hasError('min')) {
-          <mat-error>Amount must be greater than 0</mat-error>
-        }
-      </mat-form-field>
+      <!-- Main Converter Row: Amount + From + To -->
+      <div class="converter-row">
+        <!-- Amount Input -->
+        <div class="amount-field">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Amount</mat-label>
+            <input 
+              matInput 
+              type="number" 
+              formControlName="amount"
+              appCurrencyInput
+              placeholder="1.00">
+            @if (converterForm.get('amount')?.hasError('required')) {
+              <mat-error>Amount is required</mat-error>
+            }
+            @if (converterForm.get('amount')?.hasError('min')) {
+              <mat-error>Amount must be greater than 0</mat-error>
+            }
+          </mat-form-field>
+        </div>
 
-      <!-- From Currency -->
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>From</mat-label>
-        <mat-select formControlName="fromCurrency">
-          @for (currency of currencies; track currency.code) {
-            <mat-option [value]="currency.code">
-              {{ currency.code }} - {{ currency.name }}
-            </mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
+        <!-- From Currency -->
+        <div class="currency-field">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>From</mat-label>
+            <input 
+              matInput
+              formControlName="fromCurrencySearch"
+              [matAutocomplete]="autoFrom"
+              placeholder="Search currency...">
+            <mat-autocomplete 
+              #autoFrom="matAutocomplete"
+              (optionSelected)="selectFromCurrency($event.option.value)"
+              [displayWith]="displayCurrency.bind(this)">
+              @for (currency of filteredFromCurrencies$ | async; track currency.code) {
+                <mat-option [value]="currency.code">
+                  {{ currency.code }} - {{ currency.name }}
+                </mat-option>
+              }
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
 
-      <!-- Swap Button -->
-      <div class="swap-container">
-        <button 
-          mat-mini-fab 
-          color="accent" 
-          type="button"
-          (click)="swapCurrencies()"
-          aria-label="Swap currencies">
-          <mat-icon>swap_vert</mat-icon>
-        </button>
+        <!-- Swap Button -->
+        <div class="swap-container">
+          <button 
+            mat-mini-fab 
+            color="accent" 
+            type="button"
+            (click)="swapCurrencies()"
+            aria-label="Swap currencies">
+            <mat-icon>swap_horiz</mat-icon>
+          </button>
+        </div>
+
+        <!-- To Currency -->
+        <div class="currency-field">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>To</mat-label>
+            <input 
+              matInput
+              formControlName="toCurrencySearch"
+              [matAutocomplete]="autoTo"
+              placeholder="Search currency...">
+            <mat-autocomplete 
+              #autoTo="matAutocomplete"
+              (optionSelected)="selectToCurrency($event.option.value)"
+              [displayWith]="displayCurrency.bind(this)">
+              @for (currency of filteredToCurrencies$ | async; track currency.code) {
+                <mat-option [value]="currency.code">
+                  {{ currency.code }} - {{ currency.name }}
+                </mat-option>
+              }
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
       </div>
 
-      <!-- To Currency -->
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>To</mat-label>
-        <mat-select formControlName="toCurrency">
-          @for (currency of currencies; track currency.code) {
-            <mat-option [value]="currency.code">
-              {{ currency.code }} - {{ currency.name }}
-            </mat-option>
+      <!-- Second Row: Date + Convert button -->
+      <div class="bottom-row">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Historical Date (Optional)</mat-label>
+          <input 
+            matInput 
+            [matDatepicker]="picker"
+            formControlName="date"
+            [max]="maxDate"
+            placeholder="Select date for historical rate">
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-hint>Leave empty for current rate</mat-hint>
+        </mat-form-field>
+  
+        <button 
+          mat-raised-button 
+          color="primary" 
+          type="submit"
+          class="convert-btn"
+          [disabled]="converterForm.invalid || (loading$ | async)">
+          @if (!(loading$ | async)) {
+            <span>Convert</span>
           }
-        </mat-select>
-      </mat-form-field>
-
-      <!-- Date Picker for Historical Rates -->
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Historical Date (Optional)</mat-label>
-        <input 
-          matInput 
-          [matDatepicker]="picker"
-          formControlName="date"
-          [max]="maxDate"
-          placeholder="Select date for historical rate">
-        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-        <mat-hint>Leave empty for current rate</mat-hint>
-      </mat-form-field>
-
-      <!-- Convert Button -->
-      <button 
-        mat-raised-button 
-        color="primary" 
-        type="submit"
-        class="full-width convert-btn"
-        [disabled]="converterForm.invalid || (loading$ | async)">
-        @if (!(loading$ | async)) {
-          <span>Convert</span>
-        }
-        @if (loading$ | async) {
-          <mat-spinner diameter="20"></mat-spinner>
-        }
-      </button>
+          @if (loading$ | async) {
+            <mat-spinner diameter="20"></mat-spinner>
+          }
+        </button>
+      </div>
     </form>
 
     <!-- Result Display -->
