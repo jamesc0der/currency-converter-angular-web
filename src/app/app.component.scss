@@ -1,0 +1,23 @@
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  font-size: 1.25rem;
+  padding: 0 16px;
+}
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 12px;
+  }
+  
+  .toolbar {
+    font-size: 1.1rem;
+  }
+}

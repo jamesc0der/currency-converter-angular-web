@@ -1,0 +1,114 @@
+<mat-card class="converter-card">
+  <mat-card-header>
+    <mat-card-title>Convert Currency</mat-card-title>
+  </mat-card-header>
+  
+  <mat-card-content>
+    <form [formGroup]="converterForm" (ngSubmit)="convert()">
+      <!-- Amount Input -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Amount</mat-label>
+        <input 
+          matInput 
+          type="number" 
+          formControlName="amount"
+          appCurrencyInput
+          placeholder="Enter amount">
+        @if (converterForm.get('amount')?.hasError('required')) {
+          <mat-error>Amount is required</mat-error>
+        }
+        @if (converterForm.get('amount')?.hasError('min')) {
+          <mat-error>Amount must be greater than 0</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- From Currency -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>From</mat-label>
+        <mat-select formControlName="fromCurrency">
+          @for (currency of currencies; track currency.code) {
+            <mat-option [value]="currency.code">
+              {{ currency.code }} - {{ currency.name }}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Swap Button -->
+      <div class="swap-container">
+        <button 
+          mat-mini-fab 
+          color="accent" 
+          type="button"
+          (click)="swapCurrencies()"
+          aria-label="Swap currencies">
+          <mat-icon>swap_vert</mat-icon>
+        </button>
+      </div>
+
+      <!-- To Currency -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>To</mat-label>
+        <mat-select formControlName="toCurrency">
+          @for (currency of currencies; track currency.code) {
+            <mat-option [value]="currency.code">
+              {{ currency.code }} - {{ currency.name }}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Date Picker for Historical Rates -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Historical Date (Optional)</mat-label>
+        <input 
+          matInput 
+          [matDatepicker]="picker"
+          formControlName="date"
+          [max]="maxDate"
+          placeholder="Select date for historical rate">
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-hint>Leave empty for current rate</mat-hint>
+      </mat-form-field>
+
+      <!-- Convert Button -->
+      <button 
+        mat-raised-button 
+        color="primary" 
+        type="submit"
+        class="full-width convert-btn"
+        [disabled]="converterForm.invalid || (loading$ | async)">
+        @if (!(loading$ | async)) {
+          <span>Convert</span>
+        }
+        @if (loading$ | async) {
+          <mat-spinner diameter="20"></mat-spinner>
+        }
+      </button>
+    </form>
+
+    <!-- Result Display -->
+    @if (convertedAmount !== null && !((loading$ | async))) {
+      <div class="result-container">
+        <div class="result">
+          <div class="result-amount">
+            {{ converterForm.get('amount')?.value | number:'1.2-2' }} 
+            {{ converterForm.get('fromCurrency')?.value }}
+            =
+          </div>
+          <div class="result-converted">
+            {{ convertedAmount | number:'1.2-2' }} 
+            {{ converterForm.get('toCurrency')?.value }}
+          </div>
+          @if (exchangeRate) {
+            <div class="result-rate">
+              Rate: 1 {{ converterForm.get('fromCurrency')?.value }} = 
+              {{ exchangeRate | number:'1.4-4' }} {{ converterForm.get('toCurrency')?.value }}
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </mat-card-content>
+</mat-card>

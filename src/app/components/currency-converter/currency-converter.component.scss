@@ -1,0 +1,78 @@
+.converter-card {
+  margin-bottom: 24px;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.swap-container {
+  display: flex;
+  justify-content: center;
+  margin: 8px 0 16px;
+}
+
+.convert-btn {
+  height: 48px;
+  font-size: 16px;
+  font-weight: 500;
+  margin-top: 8px;
+
+  mat-spinner {
+    margin: 0 auto;
+  }
+}
+
+.result-container {
+  margin-top: 24px;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  color: white;
+}
+
+.result {
+  text-align: center;
+
+  .result-amount {
+    font-size: 16px;
+    margin-bottom: 8px;
+    opacity: 0.9;
+  }
+
+  .result-converted {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 12px;
+  }
+
+  .result-rate {
+    font-size: 14px;
+    opacity: 0.85;
+  }
+}
+
+@media (max-width: 600px) {
+  .converter-card {
+    margin-bottom: 16px;
+  }
+
+  mat-card-content {
+    padding: 12px;
+  }
+
+  .result {
+    .result-amount {
+      font-size: 14px;
+    }
+
+    .result-converted {
+      font-size: 24px;
+    }
+
+    .result-rate {
+      font-size: 12px;
+    }
+  }
+}

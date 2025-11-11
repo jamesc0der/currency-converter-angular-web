@@ -1,0 +1,50 @@
+<mat-card class="history-card">
+  <mat-card-header>
+    <mat-card-title>Conversion History</mat-card-title>
+    @if ((history$ | async)?.length) {
+      <button 
+        mat-icon-button 
+        color="warn" 
+        (click)="clearHistory()"
+        aria-label="Clear history"
+        class="clear-btn">
+        <mat-icon>delete</mat-icon>
+      </button>
+    }
+  </mat-card-header>
+  
+  <mat-card-content>
+    @if ((history$ | async)?.length === 0) {
+      <div class="empty-state">
+        <mat-icon class="empty-icon">history</mat-icon>
+        <p>No conversion history yet</p>
+      </div>
+    }
+    
+    @if ((history$ | async)?.length) {
+      <mat-list class="history-list">
+        @for (record of history$ | async; track record.id) {
+          <mat-list-item class="history-item">
+            <div class="history-content">
+              <div class="history-main">
+                <span class="amount-from">
+                  {{ record.fromAmount | number:'1.2-2' }} {{ record.fromCurrency }}
+                </span>
+                <mat-icon class="arrow-icon">arrow_forward</mat-icon>
+                <span class="amount-to">
+                  {{ record.toAmount | number:'1.2-2' }} {{ record.toCurrency }}
+                </span>
+              </div>
+              <div class="history-details">
+                <span class="rate">Rate: {{ record.rate | number:'1.4-4' }}</span>
+                <span class="date">{{ record.date }}</span>
+                <span class="timestamp">{{ formatDate(record.timestamp) }}</span>
+              </div>
+            </div>
+          </mat-list-item>
+          <mat-divider></mat-divider>
+        }
+      </mat-list>
+    }
+  </mat-card-content>
+</mat-card>
