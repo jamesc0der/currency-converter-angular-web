@@ -26,60 +26,67 @@
           </mat-form-field>
         </div>
 
-        <!-- From Currency -->
-        <div class="currency-field">
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>From</mat-label>
-            <input 
-              matInput
-              formControlName="fromCurrencySearch"
-              [matAutocomplete]="autoFrom"
-              placeholder="Search currency...">
-            <mat-autocomplete 
-              #autoFrom="matAutocomplete"
-              (optionSelected)="selectFromCurrency($event.option.value)"
-              [displayWith]="displayCurrency.bind(this)">
-              @for (currency of filteredFromCurrencies$ | async; track currency.code) {
-                <mat-option [value]="currency.code">
-                  {{ currency.code }} - {{ currency.name }}
-                </mat-option>
-              }
-            </mat-autocomplete>
-          </mat-form-field>
-        </div>
+        <!-- Currency Conversion Group -->
+        <div class="currency-conversion-group">
+          <!-- From Currency -->
+          <div class="currency-field">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>From</mat-label>
+              <input 
+                #fromInput
+                matInput
+                formControlName="fromCurrencySearch"
+                [matAutocomplete]="autoFrom"
+                (click)="fromInput.select()"
+                placeholder="Search currency...">
+              <mat-autocomplete 
+                #autoFrom="matAutocomplete"
+                (optionSelected)="selectFromCurrency($event.option.value)"
+                [displayWith]="displayCurrency.bind(this)">
+                @for (currency of filteredFromCurrencies$ | async; track currency.code) {
+                  <mat-option [value]="currency.code">
+                    {{ currency.code }} - {{ currency.name }}
+                  </mat-option>
+                }
+              </mat-autocomplete>
+            </mat-form-field>
+          </div>
 
-        <!-- Swap Button -->
-        <div class="swap-container">
-          <button 
-            mat-mini-fab 
-            color="accent" 
-            type="button"
-            (click)="swapCurrencies()"
-            aria-label="Swap currencies">
-            <mat-icon>swap_horiz</mat-icon>
-          </button>
-        </div>
+          <!-- Swap Button -->
+          <div class="swap-container">
+            <button 
+              mat-mini-fab 
+              color="accent" 
+              type="button"
+              (click)="swapCurrencies()"
+              aria-label="Swap currencies">
+              <mat-icon>swap_horiz</mat-icon>
+            </button>
+          </div>
 
-        <!-- To Currency -->
-        <div class="currency-field">
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>To</mat-label>
-            <input 
-              matInput
-              formControlName="toCurrencySearch"
-              [matAutocomplete]="autoTo"
-              placeholder="Search currency...">
-            <mat-autocomplete 
-              #autoTo="matAutocomplete"
-              (optionSelected)="selectToCurrency($event.option.value)"
-              [displayWith]="displayCurrency.bind(this)">
-              @for (currency of filteredToCurrencies$ | async; track currency.code) {
-                <mat-option [value]="currency.code">
-                  {{ currency.code }} - {{ currency.name }}
-                </mat-option>
-              }
-            </mat-autocomplete>
-          </mat-form-field>
+          <!-- To Currency -->
+          <div class="currency-field">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>To</mat-label>
+              <input 
+                #toInput
+                matInput
+                formControlName="toCurrencySearch"
+                [matAutocomplete]="autoTo"
+                (click)="toInput.select()"
+                placeholder="Search currency...">
+              <mat-autocomplete 
+                #autoTo="matAutocomplete"
+                (optionSelected)="selectToCurrency($event.option.value)"
+                [displayWith]="displayCurrency.bind(this)">
+                @for (currency of filteredToCurrencies$ | async; track currency.code) {
+                  <mat-option [value]="currency.code">
+                    {{ currency.code }} - {{ currency.name }}
+                  </mat-option>
+                }
+              </mat-autocomplete>
+            </mat-form-field>
+          </div>
         </div>
       </div>
 

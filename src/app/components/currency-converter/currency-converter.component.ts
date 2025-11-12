@@ -133,7 +133,9 @@ export class CurrencyConverterComponent implements OnInit {
     const to = this.converterForm.get('toCurrency')?.value;
     this.converterForm.patchValue({
       fromCurrency: to,
-      toCurrency: from
+      toCurrency: from,
+      fromCurrencySearch: this.displayCurrency(to),
+      toCurrencySearch: this.displayCurrency(from)
     });
     if (this.convertedAmount) {
       this.convert();
