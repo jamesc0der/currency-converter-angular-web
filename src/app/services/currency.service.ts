@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { finalize, tap } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 export interface Currency {
   symbol: string;
@@ -29,7 +30,7 @@ export interface ConversionRecord {
 })
 export class CurrencyService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/currency';
+  private apiUrl = environment.apiUrl;
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public loading$ = this.loadingSubject.asObservable();
   private currenciesCache: { data: { [key: string]: Currency } } | null = null;
