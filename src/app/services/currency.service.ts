@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { finalize, tap } from 'rxjs/operators';
 
 export interface Currency {
   symbol: string;
@@ -32,15 +32,26 @@ export class CurrencyService {
   private apiUrl = 'http://localhost:3000/api/currency';
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public loading$ = this.loadingSubject.asObservable();
+  private currenciesCache: { data: { [key: string]: Currency } } | null = null;
 
   setLoading(loading: boolean) {
     this.loadingSubject.next(loading);
   }
 
   getCurrencies(): Observable<{ data: { [key: string]: Currency } }> {
+    if (this.currenciesCache) {
+      return new Observable(observer => {
+        observer.next(this.currenciesCache!);
+        observer.complete();
+      });
+    }
+    
     this.setLoading(true);
     return this.http.get<{ data: { [key: string]: Currency } }>(`${this.apiUrl}/currencies`)
-      .pipe(tap(() => this.setLoading(false)));
+      .pipe(
+        finalize(() => this.setLoading(false)),
+        tap(response => this.currenciesCache = response)
+      );
   }
 
   getLatestRates(baseCurrency: string, targetCurrency: string): Observable<any> {
@@ -50,7 +61,7 @@ export class CurrencyService {
         base_currency: baseCurrency,
         currencies: targetCurrency
       }
-    }).pipe(tap(() => this.setLoading(false)));
+    }).pipe(finalize(() => this.setLoading(false)));
   }
 
   getHistoricalRates(date: string, baseCurrency: string, targetCurrency: string): Observable<any> {
@@ -61,6 +72,6 @@ export class CurrencyService {
         base_currency: baseCurrency,
         currencies: targetCurrency
       }
-    }).pipe(tap(() => this.setLoading(false)));
+    }).pipe(finalize(() => this.setLoading(false)));
   }
 }

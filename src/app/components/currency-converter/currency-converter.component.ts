@@ -50,6 +50,7 @@ export class CurrencyConverterComponent implements OnInit {
   exchangeRate: number | null = null;
   loading$ = this.currencyService.loading$;
   maxDate = new Date();
+  private isLoadingCurrencies = false;
 
   ngOnInit() {
     this.initForm();
@@ -68,15 +69,22 @@ export class CurrencyConverterComponent implements OnInit {
   }
 
   private loadCurrencies() {
+    if (this.isLoadingCurrencies || this.currencies.length > 0) {
+      return;
+    }
+    
+    this.isLoadingCurrencies = true;
     this.currencyService.getCurrencies().subscribe({
       next: (response) => {
         this.currencies = Object.values(response.data).sort((a, b) => 
           a.code.localeCompare(b.code)
         );
         this.setupAutocomplete();
+        this.isLoadingCurrencies = false;
       },
       error: (error) => {
         console.error('Failed to load currencies', error);
+        this.isLoadingCurrencies = false;
       }
     });
   }
